@@ -10,6 +10,8 @@ class List extends Component {
       todo: '',
       todos: [],
     };
+
+    // remember to bind methods
     this.getTodos = this.getTodos.bind(this);
     this.postTodo = this.postTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
@@ -17,20 +19,45 @@ class List extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  // when page is opened / refreshed
   componentDidMount() {
     this.getTodos();
   }
 
   getTodos() {
-
+    axios
+      .get('/api')
+        .then((todos) => {
+          this.setState({
+            // must use .data with axios
+            todos: todos.data
+          })
+        })
+        .catch((err) => {
+          console.error(err);
+        })
   }
 
   postTodo(todo) {
-
+    axios
+      .post('/api', { todo })
+        .then(() => {
+          this.getTodos();
+        })
+        .catch((err) => {
+          console.error(err);
+        })
   }
 
   deleteTodo(index) {
-
+    axios
+      .delete(`/api/${index}`)
+        .then(() => {
+          this.getTodos();
+        })
+        .catch((err) => {
+          console.error(err);
+        })
   }
 
   handleChange(event) {
